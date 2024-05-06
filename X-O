@@ -1,0 +1,118 @@
+import customtkinter as ctk
+from CTkMessagebox import CTkMessagebox
+import numpy as np
+from PIL import Image
+# X=1 O=2
+Matrix = np.array([[0,0,0],
+                   [0,0,0],
+                   [0,0,0]])
+text = ""
+T = 1
+Xe = 0
+Trial = True
+def Check():
+    while Trial == True:
+        if Matrix[0,0] == Matrix[1,0] == Matrix[2,0] != 0:
+            print("YOU WIN !")
+            CTkMessagebox(message="You Win ! ♥.",
+                          icon="check", option_1="Thanks")
+            break
+        elif Matrix[0,1] == Matrix[1,1] == Matrix[2,1] != 0:
+            print("YOU WIN !")
+            CTkMessagebox(message="You Win ! ♥.",
+                          icon="check", option_1="Thanks")
+            break
+        elif Matrix[0,2] == Matrix[1,2] == Matrix[2,2] != 0:
+            print("YOU WIN !")
+            CTkMessagebox(message="You Win ! ♥.",
+                          icon="check", option_1="Thanks")
+            break
+        elif Matrix[0,0] == Matrix[0,1] == Matrix[0,2] != 0:
+            print("YOU WIN !")
+            CTkMessagebox(message="You Win ! ♥.",
+                          icon="check", option_1="Thanks")
+            break
+        elif Matrix[1,0] == Matrix[1,1] == Matrix[1,2] != 0:
+            print("YOU WIN !")
+            CTkMessagebox(message="You Win ! ♥.",
+                          icon="check", option_1="Thanks")
+            break
+        elif Matrix[2,0] == Matrix[2,1] == Matrix[2,2] != 0:
+            print("YOU WIN !")
+            CTkMessagebox(message="You Win ! ♥.",
+                          icon="check", option_1="Thanks")
+            break
+        elif Matrix[0,0] == Matrix[1,1] == Matrix[2,2] != 0:
+            print("YOU WIN !")
+            CTkMessagebox(message="You Win ! ♥.",
+                          icon="check", option_1="Thanks")
+            break
+        elif Matrix[2,0] == Matrix[1,1] == Matrix[0,2] != 0:
+            print("YOU WIN !")
+            CTkMessagebox(message="You Win ! ♥.",
+                          icon="check", option_1="Thanks")
+            break
+        elif Xe == 9:
+            print("Draw")
+            CTkMessagebox(message="Draw ☻",
+                          icon="check", option_1="Thanks")
+            break
+        else :
+            break
+def Assign(x,y):
+    global T
+    global Xe
+    global text
+    Matrix[x, y] = T
+    if T == 1:
+        T = 2
+    elif T == 2:
+        T = 1
+    clicked_button = button_map.get((x, y))
+    if clicked_button:
+        if T == 2:
+            text = "X"
+            clicked_button.configure(text=text)
+        else:
+            text = "O"
+            clicked_button.configure(text=text)
+    Xe += 1
+    Check()
+
+
+ctk.set_appearance_mode("dark")
+root = ctk.CTk()
+root.title("X-O")
+root.geometry("300x300")
+root.grid_columnconfigure((3),weight=2)
+root.grid_rowconfigure((3), weight=2)
+btn11=ctk.CTkButton(root, width=100, height=100 , text=text,font=("Arial", 45) , command=lambda:Assign(0,0))
+btn11.grid(row=0, column=0 , padx=0, pady=0)
+btn12=ctk.CTkButton(root, width=100, height=100 , text=text,font=("Arial", 45), command=lambda:Assign(0,1))
+btn12.grid(row=0, column=1 , padx=0, pady=0)
+btn13=ctk.CTkButton(root, width=100, height=100 , text=text,font=("Arial", 45), command=lambda:Assign(0,2))
+btn13.grid(row=0, column=2 , padx=0, pady=0)
+btn21=ctk.CTkButton(root, width=100, height=100 , text=text,font=("Arial", 45), command=lambda:Assign(1,0))
+btn21.grid(row=1, column=0 , padx=0, pady=0)
+btn22=ctk.CTkButton(root, width=100, height=100 , text=text,font=("Arial", 45), command=lambda:Assign(1,1))
+btn22.grid(row=1, column=1 , padx=0, pady=0)
+btn23=ctk.CTkButton(root, width=100, height=100 , text=text,font=("Arial", 45), command=lambda:Assign(1,2))
+btn23.grid(row=1, column=2 , padx=0, pady=0)
+btn31=ctk.CTkButton(root, width=100, height=100 , text=text,font=("Arial", 45), command=lambda:Assign(2,0))
+btn31.grid(row=2, column=0 , padx=0, pady=0)
+btn32=ctk.CTkButton(root, width=100, height=100 , text=text,font=("Arial", 45), command=lambda:Assign(2,1))
+btn32.grid(row=2, column=1 , padx=0, pady=0)
+btn33=ctk.CTkButton(root, width=100, height=100 , text=text,font=("Arial", 45), command=lambda:Assign(2,2))
+btn33.grid(row=2, column=2 , padx=0, pady=0)
+button_map = {
+    (0, 0): btn11,
+    (0, 1): btn12,
+    (0, 2): btn13,
+    (1, 0): btn21,
+    (1, 1): btn22,
+    (1, 2): btn23,
+    (2, 0): btn31,
+    (2, 1): btn32,
+    (2, 2): btn33,
+}
+root.mainloop()
