@@ -1,0 +1,75 @@
+from keras.datasets import imdb
+from keras.preprocessing import sequence
+from matplotlib.patches import _Style
+import tensorflow as tf
+import keras
+import os
+import matplotlib.pylab as plt
+from matplotlib import style
+import numpy as np
+
+style.use("dark_background")
+
+# We want to make a function the encode a piece of text same as the encode technique used in imdb
+word_index = imdb.get_word_index()
+def encode_text(text):
+    tokens = keras.preprocessing.text.text_to_word_sequence(text)
+    tokens = [word_index[word] if word in word_index else 0 for word in tokens]
+    return sequence.pad_sequences([tokens], MAXLEN)[0]
+
+# This dataset is encoded from 0 to 88584 as 1 is the most used word and "3" is the 3rd used word
+VOCAB_SIZE = 88584
+
+MAXLEN = 250
+BATCH_SIZE = 64
+(train_data , train_labels),(test_data, test_labels) = imdb.load_data(num_words=VOCAB_SIZE)
+
+# This dataset does't have the same length : so we have to make it about 250
+print(len(train_data[16]))
+
+# Preprocessing
+# if the review is greater than 250 words then trim off the extra words
+# if the review is less than 250 words then add the necessary amout of 0's to make it 250
+train_data = sequence.pad_sequences(train_data, MAXLEN)
+test_data = sequence.pad_sequences(test_data , MAXLEN)
+print(len(train_data[16]))
+
+# Now we create the model
+model = tf.keras.Sequential([
+    tf.keras.layers.Embedding(VOCAB_SIZE,32),
+    tf.keras.layers.LSTM(32),
+    tf.keras.layers.Dense(1, activation="sigmoid")
+])
+# model.summary()
+
+# Now the Training 
+#model.compile(loss="binary_crossentropy" , optimizer="rmsprop", metrics=['acc'])
+#history = model.fit(train_data,train_labels , epochs=10 , validation_split=0.2)
+
+# Now the Evaluation on TEST DATA
+#results = model.evaluate(test_data,test_labels)
+#print(results)
+
+# Saving the model 
+#model.save("Movie_Reviews.h5")
+
+# Loading the Model
+model = tf.keras.models.load_model("Movie_Reviews.h5")
+
+# Predict Function
+def predict(text):
+    encoded_text = encode_text(text)
+    pred = np.zeros((1,250))
+    pred[0] = encoded_text
+    result = model.predict(pred)
+    x = ["Positive","Negative"]
+    y = [float(result[0]),1-float(result[0])]
+    plt.bar(x,y)
+    plt.show()
+    if result[0] > 0.5:
+        print(f"Positive review : {result[0]}")
+    else:
+        print(f"Negative review : {result[0]}")
+
+Test = input("Type a review about any movie and it will deside is it a Positive or Negative review : \n")
+predict(Test)
